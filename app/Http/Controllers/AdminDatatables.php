@@ -8,7 +8,9 @@ use App\AttributeGroup;
 use Datatables;
 use Illuminate\Support\Collection;
 use App\Options;
-
+use App\AttributeOptions;
+use App\Products;
+use App\Category;
 
 
 class AdminDatatables extends Controller
@@ -35,43 +37,24 @@ class AdminDatatables extends Controller
     public function getAttributes()
     {
         // $products = Products::select('product_name', 'product_price', 'product_status', 'product_quantity', 'product_id')->get();
-        $attributes = Attributes::join('attribute_group', 'attribute_group.attribute_group_id', '=', 'attributes.attribute_group_id')->where('attributes.attributes_name','!=','')->get();
+        $attributes = Attributes::all();
         $record = [];
         foreach ($attributes as $item) {
             $data = array();
             $data['attribute_name'] = $item->attributes_name;
-            $data['attribute_group_name'] = $item->attribute_group_name;
             $data['actions'] = "<a href=" . route('attribute.edit', $item->attributes_id) . " class='btn mr-1 mb-1 btn-info btn-sm'> Edit</a><a href=" . route('attribute.delete', $item->attributes_id) . " class='btn mr-1 mb-1 btn-danger btn-sm'> Delete</button>";
             $record[] = $data;
         }
-        // return $record;
-        $collection = new Collection($record);
-        return Datatables::of($collection)->make();
-    }
-    public function getGroupAttributes()
-    {
-        // $products = Products::select('product_name', 'product_price', 'product_status', 'product_quantity', 'product_id')->get();
-        $attributegroup = AttributeGroup::where('attribute_group_name', '!=', '')->get();
-        $record = [];
-        foreach ($attributegroup as $item) {
-            $data = array();
-            $data['attribute_group_name'] = $item->attribute_group_name;
-            $data['actions'] = "<a href=" . route('attributegroup.edit', $item->attribute_group_id) . " class='btn mr-1 mb-1 btn-info btn-sm'> Edit</a><a href=" . route('attributegroup.delete', $item->attribute_group_id) . " class='btn mr-1 mb-1 btn-danger btn-sm'> Delete</button>";
-            $record[] = $data;
-        }
-        // return $record;
         $collection = new Collection($record);
         return Datatables::of($collection)->make();
     }
     public function Options()
     {
-        // $options = Options::join('options_description', 'options_id', '=', 'options_id')->get();
         $options = Options::all();
         $record = [];
         foreach ($options as $item) {
             $data = array();
             $data['options_name'] = $item->option_name;
-            $data['options_type'] = $item->option_type;
             $data['actions'] = "<a href=" . route('options.edit', $item->option_id) . " class='btn mr-1 mb-1 btn-info btn-sm'> Edit</a><a href=" . route('options.delete', $item->options_id) . " class='btn mr-1 mb-1 btn-danger btn-sm'> Delete</button>";
             $record[] = $data;
         }
@@ -79,4 +62,36 @@ class AdminDatatables extends Controller
         // dd($collection);
         return Datatables::of($collection)->make();
     }
+
+    public function Category()
+    {
+        $Category = Category::all();
+        $record = [];
+        foreach ($Category as $item) {
+            $data = array();
+            $data['options_name'] = $item->category_name;
+            $data['actions'] = "<a href=" . route('category.edit', $item->category_id) . " class='btn mr-1 mb-1 btn-info btn-sm'> Edit</a><a href=" . route('category.delete', $item->category_id) . " class='btn mr-1 mb-1 btn-danger btn-sm'> Delete</button>";
+            $record[] = $data;
+        }
+        $collection = new Collection($record);
+        // dd($collection);
+        return Datatables::of($collection)->make();
+    }
+
+    public function ProductAttributes($ProductID)
+    {
+        $options = AttributeOptions::with('attributes','options', 'products')->where('product_id',$ProductID)->orderBy('updated_at', 'desc')->get();
+        $record = [];
+        foreach ($options as $item) {
+            $data = array();
+            $data['attribute_name'] = $item->attributes->attributes_name;
+            $data['options_name'] = $item->options->option_name;
+            $data['AdditionalPrice'] = $item->AdditionalPrice;
+            $data['actions'] = "<a href=" . route('options.edit', $item->option_id) . " class='btn mr-1 mb-1 btn-info btn-sm'> Edit</a><a href=" . route('options.delete', $item->options_id) . " class='btn mr-1 mb-1 btn-danger btn-sm'> Delete</button>";
+            $record[] = $data;
+        }
+        $collection = new Collection($record);
+        return Datatables::of($collection)->make();
+    }
+    
 }

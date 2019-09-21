@@ -15,8 +15,8 @@ class VerifyCsrfToken extends Middleware
         'http://127.0.0.1:8000/image/upload/store',
         'http://127.0.0.1:8000/image/delete',
         'http://127.0.0.1:8000/image/getproductimages',
-        'http://127.0.0.1:8000/admin/ListProducts/GetListProducts'
-
-        
+        'http://127.0.0.1:8000/admin/ListProducts/GetListProducts',
+        'http://127.0.0.1:8000/admin/api/saveAttributeOptions',
+        'http://127.0.0.1:8000/admin/api/ProductAttributes'
     ];
 }

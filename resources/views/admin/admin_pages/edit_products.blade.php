@@ -14,10 +14,13 @@
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('app-assets/images/ico/favicon.ico') }}">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Quicksand:300,400,500,700"
     rel="stylesheet">
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/ui/prism.min.css')}}">
   <!-- BEGIN VENDOR CSS-->
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/vendors.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/forms/selects/select2.min.css')}}">
   <!-- END VENDOR CSS-->
   <!-- BEGIN MODERN CSS-->
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/app.css')}}">
@@ -35,6 +38,7 @@
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/vendors/css/file-uploaders/dropzone.min.css')}}">
   <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/plugins/file-uploaders/dropzone.css')}}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 
 </head>
 
@@ -94,10 +98,6 @@
                       aria-expanded="true">Product Info</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link " id="Product-Attributes" data-toggle="tab" href="#Tab-Product-Attributes"
-                      aria-controls="link" aria-expanded="false">Product Attributes</a>
-                  </li>
-                  <li class="nav-item">
                     <a class="nav-link" id="Product-Options" data-toggle="tab" href="#Tab-Product-Options"
                       aria-controls="link" aria-expanded="false">Product Options</a>
                   </li>
@@ -109,7 +109,7 @@
                 {{-- tab 1 --}}
                 <div class="tab-content px-1 pt-1">
                   <div role="tabpanel" class="tab-pane active" id="active" aria-labelledby="Product-info" aria-expanded="true">
-                    <form class="form form-horizontal form-bordered" method="POST" action="{{ url('/admin/AddProducts') }}"
+                    <form class="form form-horizontal form-bordered" method="POST" action="{{ url('admin/UpdateProduct/'.$myproduct->product_id) }}"
                       id="MainForm">
                       {{csrf_field()}}
                       <div class="form-body">
@@ -161,8 +161,15 @@
                               {{-- {{var_dump($categories)}} --}}
                               <div class="col-md-9">
                                 <select name="ProductCategory" id="ProductCategory" class="form-control border-primary">
-                                  <option value="0" default>Select one</option>
-                                  <option value="{{$myproduct->category_id}}">{{$myproduct->category_id}}</option>
+                                  <option value="0">Select Category</option>
+                                  @foreach ($categories as $item)
+                                    @if ($item->category_id == $myproduct->category_id)
+                                    <option value="{{$item->category_id}}" selected>{{$item->category_name}}</option>
+                                    @else
+                                    <option value="{{$item->category_id}}">{{$item->category_name}}</option>
+                                    @endif
+                                  @endforeach
+
                                   {{-- @foreach ($categories as $item)
                                   <option value="{{$item->Category_name_id}}">{{$item->Catgory_name}}</option>
                                   @endforeach --}}
@@ -173,31 +180,6 @@
                         </div>
                         {{-- Row 2 --}}
                         {{-- Row 3 --}}
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group row">
-                              <label class="col-md-3 label-control" for="ProductDescription">Product Description</label>
-                              <div class="col-md-9">
-                                <input type="text" id="ProductDescription" class="form-control border-primary"
-                                  placeholder="Product Description" name="ProductDescription" required value="{{$myproduct->product_description}}">
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group row last">
-                              <label class="col-md-3 label-control" for="ProductColor">Product Color</label>
-                              <div class="col-md-9">
-                                <select name="ProductColor" id="ProductColor" class="form-control border-primary">
-                                  <option value="{{$myproduct->product_color}}">{{$myproduct->product_color}}</option>
-                                  {{-- <option value="Black">Black</option>
-                                  <option value="White">White</option>
-                                  <option value="Blue">Blue</option>
-                                  <option value="yellow">yellow</option> --}}
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                         {{-- Row 3 --}}
                         {{-- Row 4 --}}
                         <div class="row">
@@ -227,55 +209,14 @@
                         </div>
                         {{-- Row 4 --}}
                         {{-- Row 5 --}}
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group row">
-                              <label class="col-md-3 label-control" for="ProductSize">Product Size</label>
-                              <div class="col-md-9">
-                                <input type="text" id="ProductSize" class="form-control border-primary" placeholder="Product Size"
-                                  name="ProductSize" required value="{{$myproduct->product_size}}">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        {{-- Row 5 --}}
-                        {{-- Repeater --}}
-                        {{--
-                        <div class="row">
-                          <div class="col-md-12 ">
-                            <div class="repeater-default">
-                              <div data-repeater-list="Images">
-                                <div data-repeater-item="">
-                                  <div class="row" style="margin-bottom: 10px !important;">
-                                    <div class="col-9">
-                                      <fieldset>
-                                        <div class="custom-file">
-                                          <label class="custom-file-label form-control border-primary" for="FileName">Choose
-                                            file</label>
-                                          <input type="file" class="custom-file-input" id="FileName" name="FileName">
-                                        </div>
-                                      </fieldset>
-                                    </div>
 
-                                    <div class="col-3 text-center">
-                                      <button type="button" class="btn btn-danger" data-repeater-delete> <i class="ft-x"></i>
-                                        Delete</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="overflow-hidden">
-                                <div class="col-12">
-                                  <button data-repeater-create type="button" class="btn btn-primary">
-                                    <i class="ft-plus"></i> Add Images
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
+                        <h4 class="form-section"><i class="la la-eye"></i>Product Details</h4>
+                        <div class="row">
+                          <div class="form-group row">
+                            <textarea cols="50" rows="15" class="ckeditor" id="ProductDescription" name="ProductDescription">{{$myproduct->product_description}}</textarea>
                           </div>
                         </div>
-                        --}}
-                        {{-- Repeater --}}
+
                         <div class="row">
                           <div class="col-md-12">
                             <div class="form-actions right">
@@ -293,435 +234,91 @@
 
                 </div>
                 {{-- tab 1 --}}
-                {{-- Tab 2 --}}
-                <div class="tab-pane" id="Tab-Product-Attributes" role="tabpanel" aria-labelledby="Product-Attributes"
+
+                {{-- Tab 3 --}}
+                <div class="tab-pane" id="Tab-Product-Options" role="tabpanel" aria-labelledby="Product-Options"
                   aria-expanded="false">
-                  <form class="form form-horizontal form-bordered" method="POST" action="{{ route('attribute.updateproduct',$myproduct->product_id) }}"
-                    id="MainForm">
-                    {{csrf_field()}}
-                    <div class="form-body">
-
-
-                      <div class="row">
-                        <div class="col-md-12 ">
-                          {{-- Repeater --}}
-                          <div class="repeater-default">
-                            <div data-repeater-list="Attributes">
-                              @if ($attributes != null)
-
-                              @foreach ($attributes as $attribute)
+                  <div class="tab-content px-1">
+                    <div role="tabpanel" class="tab-pane active" id="tabVerticalLeft11" aria-expanded="true"
+                      aria-labelledby="baseVerticalLeft1-tab1">
+                      <form class="form form-horizontal form-bordered" method="POST" action="{{ route('saveAttributeOptions') }}"
+                        id="MainForm">
+                        {{csrf_field()}}
+                        <div class="form-body">
+                          <div class="row">
+                            <div class="col-md-3" style="display:none;">
+                              <input type="text" id="ProductID" class="form-control border-primary ProductNumber"
+                                placeholder="Product ID" name="ProductID" required value="" placeholder="">
+                            </div>
+                            <div class="col-md-3">
                               <div class="row">
-                                <div class="col-md-6">
-                                  <div class="form-group row">
-                                    <label class="col-md-3 label-control" for="AttributeName">Attribute
-                                      Name</label>
-                                    <div class="col-md-9">
-                                      <input type="text" id="AttributeName" class="form-control border-primary"
-                                        placeholder="Attribute Name" name="AttributeName" required value="{{$attribute->attributes_name}}">
-                                    </div>
-                                  </div>
+                                <div class="col-md-4" style="padding-top:5px;">
+                                  <label for="">Attribute Name</label>
                                 </div>
-                                <div class="col-md-6">
-                                  <div class="form-group row last">
-                                    <label class="col-md-3 label-control" for="AttributeGroup">Attribute Group</label>
-                                    <div class="col-md-9">
-                                      <select name="AttributeGroup" id="AttributeGroup" class="form-control border-primary">
-                                        <option value="0">Please Select</option>
-                                        @foreach ($GroupAttributes as $item)
-                                        @if ( $item->attribute_group_name == $attribute->GroupAttribute->attribute_group_name )
-                                        <option selected value="{{$item->attribute_group_id}}">{{$item->attribute_group_name}}</option>
-                                        @else
-                                        <option value="{{$item->attribute_group_id}}">{{$item->attribute_group_name}}</option>
-                                        @endif
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              @endforeach
-
-                              @endif
-
-                              <div data-repeater-item="">
-                                <div class="row">
-                                  <div class="col-md-6">
-                                    <div class="form-group row">
-                                      <label class="col-md-3 label-control" for="AttributeName">Attribute
-                                        Name</label>
-                                      <div class="col-md-9">
-                                        <input type="text" id="AttributeName" class="form-control border-primary"
-                                          placeholder="Attribute Name" name="AttributeName" required>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-md-6">
-                                    <div class="form-group row last">
-                                      <label class="col-md-3 label-control" for="AttributeGroup">Attribute Group</label>
-                                      <div class="col-md-9">
-                                        <select name="AttributeGroup" id="AttributeGroup" class="form-control border-primary"
-                                          required>
-                                          <option value="0" selected>Please Select</option>
-                                          @foreach ($GroupAttributes as $item)
-                                          <option value="{{$item->attribute_group_id}}">{{$item->attribute_group_name}}</option>
-                                          @endforeach
-                                        </select>
-                                      </div>
-                                    </div>
-                                  </div>
+                                <div class="col-md-8">
+                                  <select name="AttributeID" id="AttributeID" class="form-control AttributeID border-primary">
+                                    <option value="0">Select Any One</option>
+                                    @foreach ($attributes as $attribute)
+                                    <option value="{{$attribute->attributes_id}}">{{$attribute->attributes_name}}</option>
+                                    @endforeach
+                                  </select>
                                 </div>
                               </div>
                             </div>
-                            <div class="overflow-hidden">
-                              <div class="col-12">
-                                <button data-repeater-create type="button" class="btn btn-primary">
-                                  <i class="ft-plus"></i> Add Attributes
+                            <div class="col-md-4">
+                              <div class="row">
+                                <div class="col-md-4" style="padding-top:5px;">
+                                  <label for="">Option Name</label>
+                                </div>
+                                <div class="col-md-8">
+                                  <select name="OptionID" id="OptionID" class="form-control OptionID border-primary">
+                                    <option value="0">Please select Attribute First</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="row">
+                                <div class="col-md-4" style="padding-top:5px;">
+                                  <label for="">Additional Price</label>
+                                </div>
+                                <div class="col-md-8">
+                                  <input name="AdditionalPrice" id="AdditionalPrice" class="form-control border-primary"
+                                    placeholder="Additional Price">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-1">
+                                <button type="button" id="saveProductOptions" class="btn btn-primary">
+                                  <i class="la la-check-square-o"></i> Save
                                 </button>
                               </div>
                             </div>
                           </div>
-                          {{-- Repeater --}}
                         </div>
+                      </form>
+
+                      <div class="table-responsive">
+                        <table class="datatable mdl-data-table dataTable" cellspacing="0" width="100%" role="grid"
+                          style="width: 100%;">
+                          <thead>
+                            <tr>
+                              <th>Attribute Name</th>
+                              <th>Option Name</th>
+                              <th>Additional Price</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
                       </div>
 
-
-
-
-
-
-                      <div class="row">
-                        <div class="col-md-12">
-                          <div class="form-actions right">
-                            <button type="button" class="btn btn-warning mr-1">
-                              <i class="ft-x"></i> Cancel
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                              <i class="la la-check-square-o"></i> Save
-                            </button>
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
-                  </form>
-
-                </div>
-
-                {{-- Tab 2 --}}
-                {{-- Tab 3 --}}
-                <div class="tab-pane" id="Tab-Product-Options" role="tabpanel" aria-labelledby="Product-Options"
-                  aria-expanded="false">
-                  <div class="nav-vertical">
-                    <ul class="nav nav-tabs nav-justified" style="height: 82.3906px;">
-                      @foreach ($attributeOptions as $item)
-                      <li class="nav-item">
-                        <a class="nav-link" id="{{$item->option_name}}" data-toggle="tab" aria-controls="{{$item->option_id}}"
-                          href="{{'#'.$item->option_id}}" aria-expanded="false">{{$item->option_name}}</a>
-                      </li>
-                      @endforeach
-                      <li class="nav-item">
-                        <a class="nav-link active" id="baseVerticalLeft1-tab3" data-toggle="tab" aria-controls="tabVerticalLeft13"
-                          href="#tabVerticalLeft13" aria-expanded="true">Create</a>
-                      </li>
-                    </ul>
-                    <div class="tab-content px-1">
-                      @foreach ($attributeOptions as $item)
-                      <div class="tab-pane" id="{{$item->option_id}}" aria-labelledby="{{$item->option_name}}">
-                        {{-- Content 2 --}}
-                        <form class="form form-horizontal form-bordered" method="POST" action="{{ route('options.save') }}"
-                          id="MainForm">
-                          {{csrf_field()}}
-                          <div class="form-body">
-
-                            <div class="row">
-                              <div class="col-md-12">
-                                <h4 class="form-section"><i class="la la-eye"></i>Add Option</h4>
-                                <div class="form-group row last">
-                                  <label class="col-md-2 label-control" for="OptionName">Option
-                                    Name</label>
-                                  <div class="col-md-9">
-                                    <input type="text" id="OptionName" class="form-control border-primary" placeholder="Option Name"
-                                      name="OptionName" required value="{{$item->option_name or ''}}">
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-12">
-                                <div class="form-group row last">
-                                  <label class="col-md-2 label-control" for="AttributeOptions">Attribute
-                                    Options</label>
-                                  <div class="col-md-9">
-                                    <select name="AttributeOptions" id="AttributeOptions" class="form-control border-primary">
-                                      <option value="0">Please Select</option>
-                                      @if(!empty($attributes))
-                                      @foreach ($attributes as $attribute)
-                                      @if (!empty($attributeOptions))
-                                      @if ($item->AttributeDetails->attributes_name ==
-                                      $attribute->attributes_name)
-                                      <option value="{{$attribute->attributes_id}}" selected>{{$attribute->attributes_name}}</option>
-                                      @endif
-                                      @else
-                                      <option value="{{$attribute->attributes_id}}">{{$attribute->attributes_name}}</option>
-                                      @endif
-                                      @endforeach
-                                      @endif
-                                    </select>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-12">
-                                <div class="form-group row last">
-                                  <label class="col-md-2 label-control" for="OptionsType">Options
-                                    Type</label>
-                                  <div class="col-md-9">
-                                    <select name="OptionsType" id="OptionsType" class="form-control border-primary">
-                                      <option value="0">Please Select</option>
-                                      <option value="radio">Radio</option>
-                                      <option value="checkbox">Check Box</option>
-                                      <option value="text">Text</option>
-                                      <option value="select">Select</option>
-                                      <option value="textarea">TextArea</option>
-                                    </select>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-12">
-                                <div class="form-group row last">
-                                  <label class="col-md-2 label-control" for="ProductId">Product ID</label>
-                                  <div class="col-md-9">
-                                    <input type="text" id="ProductID" class="form-control border-primary ProductNumber"
-                                      placeholder="Product ID" name="ProductID" required value="">
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-md-12">
-                                <div class="form-group row last">
-                                  <label class="col-md-2 label-control" for="OptionID">Option ID</label>
-                                  <div class="col-md-9">
-                                    <input type="text" id="OptionID" class="form-control border-primary"
-                                      placeholder="Option ID" name="OptionID" required value="">
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            {{-- Repeater --}}
-
-                            <div class="row">
-                              <div class="col-md-12 ">
-                                <h4 class="form-section"><i class="la la-eye"></i> Add Option Details</h4>
-                                @if (!empty($attributeOptions))
-                                @foreach ($item->OptionDetails as $item2)
-                                <div class="row">
-                                  <div class="col-md-10 col-sm-12">
-                                    <div class="form-group row">
-                                      <div class="col-md-6">
-                                        <input type="text" id="Text" class="form-control border-primary" placeholder="Option Text"
-                                          name="Text" required value="{{$item2->option_details}}">
-                                      </div>
-                                      <div class="col-md-6">
-                                        <input type="text" id="Price" class="form-control border-primary" placeholder="Option Price"
-                                          name="Price" required value="{{$item2->option_price}}">
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div class="col-md-2 col-sm-12 text-center" style="margin-top: 15px !important;">
-                                    <button type="button" class="btn btn-danger" data-repeater-delete> <i class="ft-x"></i>
-                                      Delete</button>
-                                  </div>
-                                </div>
-
-                                @endforeach
-
-                                @endif
-                                <div class="repeater-default">
-                                  <div data-repeater-list="Options">
-                                    <div data-repeater-item="">
-                                      <div class="row">
-                                        <div class="col-md-10 col-sm-12">
-                                          <div class="form-group row">
-                                            <div class="col-md-6">
-                                              <input type="text" id="Text" class="form-control border-primary"
-                                                placeholder="Option Text" name="Text" required value="">
-                                            </div>
-                                            <div class="col-md-6">
-                                              <input type="text" id="Price" class="form-control border-primary"
-                                                placeholder="Option Price" name="Price" required value="">
-                                            </div>
-                                          </div>
-                                        </div>
-
-                                        <div class="col-md-2 col-sm-12 text-center" style="margin-top: 15px !important;">
-                                          <button type="button" class="btn btn-danger" data-repeater-delete> <i class="ft-x"></i>
-                                            Delete</button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="overflow-hidden">
-                                    <div class="col-12">
-                                      <button data-repeater-create type="button" class="btn btn-primary">
-                                        <i class="ft-plus"></i> Add Options
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            {{-- Repeater --}}
-                            <div class="row">
-                              <div class="col-md-12">
-                                <div class="form-actions right">
-                                  <button type="button" class="btn btn-warning mr-1">
-                                    <i class="ft-x"></i> Cancel
-                                  </button>
-                                  <button type="submit" class="btn btn-primary">
-                                    <i class="la la-check-square-o"></i> Save
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                        </form>
-                        {{-- Content 2 --}}
-                      </div>
-                      @endforeach
-
-                      <div class="tab-pane" id="tabVerticalLeft13" aria-labelledby="baseVerticalLeft1-tab3">
-                        <div role="tabpanel" class="tab-pane active" id="tabVerticalLeft11" aria-expanded="true"
-                          aria-labelledby="baseVerticalLeft1-tab1">
-                          <form class="form form-horizontal form-bordered" method="POST" action="{{ route('options.save') }}"
-                            id="MainForm">
-                            {{csrf_field()}}
-                            <div class="form-body">
-
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <h4 class="form-section"><i class="la la-eye"></i>Add Option</h4>
-                                  <div class="form-group row last">
-                                    <label class="col-md-2 label-control" for="OptionName">Option
-                                      Name</label>
-                                    <div class="col-md-9">
-                                      <input type="text" id="OptionName" class="form-control border-primary"
-                                        placeholder="Option Name" name="OptionName" required value="">
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-group row last">
-                                    <label class="col-md-2 label-control" for="AttributeOptions">Attribute
-                                      Options</label>
-                                    <div class="col-md-9">
-                                      <select name="AttributeOptions" id="AttributeOptions" class="form-control border-primary">
-                                        <option value="0">Please Select</option>
-                                        @if(!empty($attributes))
-                                        @foreach ($attributes as $attribute)
-                                        <option value="{{$attribute->attributes_id}}">{{$attribute->attributes_name}}</option>
-                                        @endforeach
-                                        @endif
-                                      </select>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-group row last">
-                                    <label class="col-md-2 label-control" for="OptionsType">Options
-                                      Type</label>
-                                    <div class="col-md-9">
-                                      <select name="OptionsType" id="OptionsType" class="form-control border-primary">
-                                        <option value="0">Please Select</option>
-                                        <option value="radio">Radio</option>
-                                        <option value="checkbox">Check Box</option>
-                                        <option value="text">Text</option>
-                                        <option value="select">Select</option>
-                                        <option value="textarea">TextArea</option>
-                                      </select>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row" style="display:none;">
-                                <div class="col-md-12">
-                                  <div class="form-group row last">
-                                    <label class="col-md-2 label-control" for="ProductId">Product ID</label>
-                                    <div class="col-md-9">
-                                      <input type="text" id="ProductID" class="form-control border-primary ProductNumber"
-                                        placeholder="Product ID" name="ProductID" required value="">
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="row">
-                                <div class="col-md-12 ">
-                                  <h4 class="form-section"><i class="la la-eye"></i> Add Option Details</h4>
-                                  <div class="repeater-default">
-                                    <div data-repeater-list="Options">
-                                      <div data-repeater-item="">
-                                        <div class="row">
-                                          <div class="col-md-10 col-sm-12">
-                                            <div class="form-group row">
-                                              <div class="col-md-6">
-                                                <input type="text" id="Text" class="form-control border-primary"
-                                                  placeholder="Option Text" name="Text" required value="">
-                                              </div>
-                                              <div class="col-md-6">
-                                                <input type="text" id="Price" class="form-control border-primary"
-                                                  placeholder="Option Price" name="Price" required value="">
-                                              </div>
-                                            </div>
-                                          </div>
-
-                                          <div class="col-md-2 col-sm-12 text-center" style="margin-top: 15px !important;">
-                                            <button type="button" class="btn btn-danger" data-repeater-delete> <i class="ft-x"></i>
-                                              Delete</button>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="overflow-hidden">
-                                      <div class="col-12">
-                                        <button data-repeater-create type="button" class="btn btn-primary">
-                                          <i class="ft-plus"></i> Add Options
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              {{-- Repeater --}}
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-actions right">
-                                    <button type="button" class="btn btn-warning mr-1">
-                                      <i class="ft-x"></i> Cancel
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">
-                                      <i class="la la-check-square-o"></i> Save
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                          </form>
-                        </div>
-
-                      </div>
-                    </div>
                   </div>
+
                 </div>
                 {{-- Tab 3 --}}
                 {{-- Tab 4 --}}
@@ -749,20 +346,6 @@
                   </div>
                 </div>
                 {{-- Tab 4 --}}
-                {{-- Submit buttons --}}
-                {{-- <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-actions right">
-                      <button type="button" class="btn btn-warning mr-1">
-                        <i class="ft-x"></i> Cancel
-                      </button>
-                      <button type="submit" class="btn btn-primary">
-                        <i class="la la-check-square-o"></i> Save
-                      </button>
-                    </div>
-                  </div>
-                </div> --}}
-                {{-- Submit buttons --}}
 
               </div> {{-- Card Body --}}
             </div> {{-- Card Content --}}
@@ -847,7 +430,45 @@
   $(hash).attr('aria-expanded',true);
   $(hash).addClass('active');
   }); --}}
+  {{-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> --}}
+  <script src="{{asset('app-assets/vendors/js/forms/select/select2.full.min.js')}}" type="text/javascript"></script>
+  <script src="{{asset('app-assets/js/scripts/forms/select/form-select2.js')}}" type="text/javascript"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="{{ asset('app-assets/vendors/js/editors/ckeditor/ckeditor.js')}}" type="text/javascript"></script>
+  <script src="{{ asset('app-assets/js/scripts/editors/editor-ckeditor.js')}}" type="text/javascript"></script>
+  <script>
+    $(function () {
 
+      var availableTags = [
+        "ActionScript",
+        "AppleScript",
+        "Asp",
+        "BASIC",
+        "C",
+        "C++",
+        "Clojure",
+        "COBOL",
+        "ColdFusion",
+        "Erlang",
+        "Fortran",
+        "Groovy",
+        "Haskell",
+        "Java",
+        "JavaScript",
+        "Lisp",
+        "Perl",
+        "PHP",
+        "Python",
+        "Ruby",
+        "Scala",
+        "Scheme"
+      ];
+      $("#tags").autocomplete({
+        source: availableTags
+      });
+    });
+  </script>
 
   <script>
     var ProductID = location.pathname;
@@ -856,6 +477,24 @@
     ProductID = ProductID[length - 1];
     $('.ProductNumber').val(ProductID);
     console.log(ProductID);
+
+    $(document).ready(function () {
+      var url = "http://127.0.0.1:8000/admin/api/ProductAttributes/" + ProductID;
+      console.log(url);
+
+      $('.datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: url,
+        method: "get",
+        success: function () {
+          console.log('Success');
+        },
+        error: function () {
+          console.log('Success');
+        },
+      });
+    });
 
 
     var mydropz;
@@ -939,8 +578,48 @@
     };
   </script>
 
+  <script>
+    $(document).on('change', '#AttributeID', function () {
+      var attributeid = $('#AttributeID').val();
+      //      alert(attributeid);
+      let url = '/admin/api/getOptionsbyAttribute/' + attributeid;
+      console.log('url', url);
+      if (attributeid != 0) {
+        $.get(url, function (data, status) {
+          $('#OptionID').html('');
+          var options = [];
+          for (var i = 0; i < data.length; i++) {
+            options += "<option value=" + data[i].option_id + ">" + data[i].option_name + "</option>";
+          }
+          $('#OptionID').append(options);
+        });
+      } else {
 
-
+        $('#OptionID').html('<option value="0">Please select Attribute First</option>');
+      }
+    });
+  </script>
+  <script>
+    $('#saveProductOptions').click(function () {
+      $.ajax({
+        type: 'POST',
+        data: {
+          AdditionalPrice: $('#AdditionalPrice').val(),
+          OptionID: $('#OptionID').val(),
+          AttributeID: $('#AttributeID').val(),
+          ProductID: $('#ProductID').val()
+        },
+        url: '{{route("saveAttributeOptions")}}',
+        success: function (response) {
+          console.log(response);
+          $('#OptionID').val('');
+          $('#AttributeID').val('');
+          $('#AdditionalPrice').val('');
+          $('.datatable').DataTable().ajax.reload();
+        }
+      });
+    });
+  </script>
 
 
   <!-- END PAGE LEVEL JS-->

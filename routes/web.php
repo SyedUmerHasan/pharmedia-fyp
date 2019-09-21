@@ -34,32 +34,19 @@ Route::get('/notification/MarkAllAsRead', function () {
 
 
 
-// Route::match(['get', 'post'], '/admin/upload', 'ProductAdminController@image_upload')->name('image_upload');
-
-
 // Ecommerce Pages
-Route::get('/', 'ProductController@showhome')->name('ecommerce_home');
+Route::get('/', 'MainThemeController@HomePage')->name('HomePage');
+Route::get('/AboutUs', 'MainThemeController@AboutUsPage')->name('AboutUs');
+Route::get('/Services', 'MainThemeController@Services')->name('Services');
+Route::get('/AddApointment', 'AppointmentController@AddApointment')->name('AddApointment');
 
-Route::get('/products', 'ProductController@showproducts')->name('showproducts');
 
-
-Route::get('image/upload', 'ProductController@fileCreate');
-Route::post('image/upload/store', 'ProductController@fileStore');
-Route::post('image/delete', 'ProductController@fileDestroy');
-Route::post('image/getproductimages', 'ProductController@GetProductsImages');
-
-// Route::get('/admin/ListProducts/GetListProducts', [
-//     'as' => 'GetListProducts',
-//     'uses' => function () {
-//         $users = App\Products::select('product_name', 'product_price', 'product_status', 'product_quantity', 'product_id')->get();
-//         return Datatables::of($users)->make();
-//     }
-// ]);
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::get('/CreateProducts', 'ProductAdminController@CreateProducts')->name('admin.CreateProducts');
-    Route::post('/AddProducts', 'ProductAdminController@AddProducts')->name('admin.AddProducts');
     Route::get('/EditProduct/{ProductId}', 'ProductAdminController@EditProduct')->name('admin.EditProduct');
+    Route::post('/AddProducts', 'ProductAdminController@AddProducts')->name('admin.AddProducts');
+    Route::post('/UpdateProduct/{ProductId}', 'ProductAdminController@UpdateProduct')->name('admin.UpdateProduct');
     Route::get('/ListProducts', 'ProductAdminController@ListProducts')->name('admin.ListProducts');
     Route::get('/ListProducts/GetListProducts', 'ProductAdminController@GetListProductsDuplicate')->name('GetListProducts');
     Route::get('/changeActive/{product_id}', 'ProductAdminController@changeActive')->name('changeActive');
@@ -73,58 +60,51 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     /**
      * Route Attribute
      */
-    Route::group(['prefix' => 'attributes'], function () {
-        Route::get('/', 'AttributeController@index')->name('attribute.index');
-        Route::get('/create', 'AttributeController@create')->name('attribute.create');
-        Route::get('/edit/{attribute_id}', 'AttributeController@edit')->name('attribute.edit');
-        Route::match(['get', 'post'], '/update/{attribute_id}', 'AttributeController@update')->name('attribute.update');
-        Route::match(['get', 'post'], '/save', 'AttributeController@save')->name('attribute.save');
-        Route::get('/delete/{attribute_id}', 'AttributeController@delete')->name('attribute.delete');
-        Route::match(['get', 'post'], '/updateproduct/{attribute_id}', 'AttributeController@updateproduct')->name('attribute.updateproduct');
+    Route::group(['prefix' => 'symptom'], function () {
+        Route::get('/', 'SymptomController@index')->name('symptom.index');
+        Route::get('/create', 'SymptomController@create')->name('symptom.create');
+        Route::get('/edit/{symptom_id}', 'SymptomController@edit')->name('symptom.edit');
+        Route::match(['get', 'post'], '/update/{symptom_id}', 'SymptomController@update')->name('symptom.update');
+        Route::match(['get', 'post'], '/save', 'SymptomController@save')->name('symptom.save');
+        Route::get('/delete/{symptom_id}', 'SymptomController@delete')->name('symptom.delete');
+        Route::match(['get', 'post'], '/updateproduct/{symptom_id}', 'SymptomController@updateproduct')->name('symptom.updateproduct');
     });
+
+    Route::group(['prefix' => 'weight'], function () {
+        Route::get('/', 'WeightController@index')->name('weight.index');
+    });
+    Route::group(['prefix' => 'diease'], function () {
+        Route::get('/', 'DieaseController@index')->name('diease.index');
+        Route::get('/create', 'DieaseController@create')->name('diease.create');
+        Route::get('/edit/{diease_id}', 'DieaseController@edit')->name('diease.edit');
+        Route::match(['get', 'post'], '/update/{diease_id}', 'DieaseController@update')->name('diease.update');
+        Route::match(['get', 'post'], '/save', 'DieaseController@save')->name('diease.save');
+        Route::get('/delete/{diease_id}', 'DieaseController@delete')->name('diease.delete');
+        Route::match(['get', 'post'], '/updateproduct/{diease_id}', 'DieaseController@updateproduct')->name('diease.updateproduct');
+    });
+    Route::group(['prefix' => 'patients'], function () {
+        Route::get('/', 'PatientController@index')->name('patients.index');
+        Route::get('/create', 'PatientController@create')->name('patients.create');
+        Route::get('/edit/{patient_id}', 'PatientController@edit')->name('patient.edit');
+        Route::match(['get', 'post'], '/update/{patient_id}', 'PatientController@update')->name('patients.update');
+        Route::match(['get', 'post'], '/save', 'PatientController@save')->name('patients.save');
+        Route::get('/delete/{patient_id}', 'PatientController@delete')->name('patients.delete');
+        Route::match(['get', 'post'], '/updateproduct/{patient_id}', 'PatientController@updateproduct')->name('patients.updateproduct');
+    });
+
     /**
      * Route Attribute
-     *  */
-
-    /**
-     * Attribute Options
      */
-
-    Route::group(['prefix' => 'options'], function () {
-        Route::get('/', 'OptionsController@index')->name('options.index');
-        Route::get('/create', 'OptionsController@create')->name('options.create');
-        Route::get('/edit/{attribute_id}', 'OptionsController@edit')->name('options.edit');
-        Route::match(['get', 'post'], '/update/{attribute_id}', 'OptionsController@update')->name('options.update');
-        Route::match(['get', 'post'], '/save', 'OptionsController@save')->name('options.save');
-        Route::get('/delete/{attribute_id}', 'OptionsController@delete')->name('options.delete');
-    });
-    /**
-     * Attribute Options
-     */
-
-    /**
-     * Route Attribute
-     */
-    Route::group(['prefix' => 'attributegroup'], function () {
-        Route::get('/', 'AttributeGroupController@index')->name('attributegroup.index');
-        Route::get('/create', 'AttributeGroupController@create')->name('attributegroup.create');
-        Route::get('/edit/{attribute_id}', 'AttributeGroupController@edit')->name('attributegroup.edit');
-        Route::match(['get', 'post'], '/update/{attribute_id}', 'AttributeGroupController@update')->name('attributegroup.update');
-        Route::match(['get', 'post'], '/save', 'AttributeGroupController@store')->name('attributegroup.save');
-        Route::get('/delete/{attribute_id}', 'AttributeGroupController@delete')->name('attributegroup.delete');
-    });
-
 
     Route::group(['prefix' => 'api'], function () {
          
-        Route::get('getAttributes', 'AdminDatatables@getAttributes')->name('getAttributes');
-        Route::get('getGroupAttributes', 'AdminDatatables@getGroupAttributes')->name('getGroupAttributes');
-        Route::get('getOptions', 'AdminDatatables@Options')->name('getOptions');
-         
+        Route::get('symptom', 'WebsiteDatatableController@symptom')->name('symptom');
+        Route::get('diease', 'WebsiteDatatableController@diease')->name('diease');
+        Route::get('patients', 'WebsiteDatatableController@patients')->name('patients');
+        Route::get('weight', 'WebsiteDatatableController@weight')->name('weight');
+
+
     });
 
     
-    /**
-     * Route Attribute
-     *  */ 
 });

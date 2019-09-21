@@ -59,7 +59,7 @@ class AdminController extends Controller
         // die;
         $data = $request->all();
         $current_password = $data['currentpassword'];
-        $check_password = User::where(['id' => '1'])->first();
+        $check_password = User::where(['id' => '0'])->first();
         if(Hash::check($current_password, $check_password->password)){
             echo 'true';
             die;
@@ -78,7 +78,7 @@ class AdminController extends Controller
             $currentpassword = $data['currentpassword'];
             if (Hash::check($currentpassword, $checkpassword->password)) {
                 $password = bcrypt($data['password']);
-                User::where('admin','1')->update(['password'=>$password]);
+                User::where('admin','0')->update(['password'=>$password]);
                 $Notify = '<div class="alert alert-success mb-2" role="alert">
                                     <strong>
                                         You have succesfully changed your password
@@ -105,7 +105,7 @@ class AdminController extends Controller
             $data = $request->all();
             $checkusername = User::where(['email' => Auth::user()->email])->first();
             $currentusername = $data['currentusername'];
-            User::where('admin', '1')->update(['name' => $currentusername]);
+            User::where('admin', '0')->update(['name' => $currentusername]);
             $Notify = '<div class="alert alert-success mb-2" role="alert">
                                 <strong>
                                     You have succesfully changed your Username to '.$currentusername.'

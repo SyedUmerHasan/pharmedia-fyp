@@ -25,8 +25,6 @@ class DatabaseSeeder extends Seeder
                 'product_description' => $faker->paragraph,
                 'product_price' => $faker->randomDigit,
                 'product_discounted_price' => $faker->randomDigit,
-                'product_color' => $faker->word,
-                'product_size' => $faker->word,
                 'product_quantity' => $faker->randomDigit,
                 'product_status' => '1'
 

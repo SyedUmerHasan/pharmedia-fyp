@@ -52,9 +52,9 @@
           <div class="row breadcrumbs-top">
             <div class="breadcrumb-wrapper col-12">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/admin">Home</a>
+                <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a>
                 </li>
-                <li class="breadcrumb-item active"><a href="/admin/CreateProducts">Add Products</a>
+                <li class="breadcrumb-item active"><a href="{{route('admin.CreateProducts')}}">Add Products</a>
                 </li>
               </ol>
             </div>
@@ -75,11 +75,11 @@
         <!-- Basic CKEditor start -->
         <section id="basic">
           @foreach (['danger', 'warning', 'success', 'info'] as $msg)
-          @if(Session::has($msg))
-          <div id="form-messages" class="alert alert-{{$msg}}" role="alert">
-            {{ Session::get($msg) }}
-          </div>
-          @endif
+            @if(Session::has($msg))
+            <div id="form-messages" class="alert alert-{{$msg}}" role="alert">
+              {{ Session::get($msg) }}
+            </div>
+            @endif
           @endforeach
           {{-- card --}}
           <div class="card" style="">
@@ -107,6 +107,7 @@
                       Images</a>
                   </li>
                 </ul>
+
                 {{-- tab 1 --}}
                 <div class="tab-content px-1 pt-1">
                   <div role="tabpanel" class="tab-pane active" id="active" aria-labelledby="Product-info" aria-expanded="true">
@@ -165,7 +166,7 @@
                                 <select name="ProductCategory" id="ProductCategory" class="form-control border-primary">
                                   <option value="0" default>Select one</option>
                                   @foreach ($categories as $item)
-                                  <option value="{{$item->Category_name_id}}">{{$item->Catgory_name}}</option>
+                                    <option value="{{$item->category_id}}">{{$item->category_name}}</option>
                                   @endforeach
                                 </select>
                               </div>
@@ -174,30 +175,6 @@
                         </div>
                         {{-- Row 2 --}}
                         {{-- Row 3 --}}
-                        <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group row">
-                              <label class="col-md-3 label-control" for="ProductDescription">Product Description</label>
-                              <div class="col-md-9">
-                                <input type="text" id="ProductDescription" class="form-control border-primary"
-                                  placeholder="Product Description" name="ProductDescription" required>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group row last">
-                              <label class="col-md-3 label-control" for="ProductColor">Product Color</label>
-                              <div class="col-md-9">
-                                <select name="ProductColor" id="ProductColor" class="form-control border-primary">
-                                  <option value="Black">Black</option>
-                                  <option value="White">White</option>
-                                  <option value="Blue">Blue</option>
-                                  <option value="yellow">yellow</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                         {{-- Row 3 --}}
                         {{-- Row 4 --}}
                         <div class="row">
@@ -227,55 +204,13 @@
                         </div>
                         {{-- Row 4 --}}
                         {{-- Row 5 --}}
+                        <h4 class="form-section"><i class="la la-eye"></i>Product Details</h4>
                         <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group row">
-                              <label class="col-md-3 label-control" for="ProductSize">Product Size</label>
-                              <div class="col-md-9">
-                                <input type="text" id="ProductSize" class="form-control border-primary" placeholder="Product Size"
-                                  name="ProductSize" required>
-                              </div>
-                            </div>
+                          <div class="form-group row">
+                            <textarea cols="30" rows="15" class="ckeditor" id="ProductDescription" name="ProductDescription"></textarea>
                           </div>
                         </div>
                         {{-- Row 5 --}}
-                        {{-- Repeater --}}
-                        {{--
-                        <div class="row">
-                          <div class="col-md-12 ">
-                            <div class="repeater-default">
-                              <div data-repeater-list="Images">
-                                <div data-repeater-item="">
-                                  <div class="row" style="margin-bottom: 10px !important;">
-                                    <div class="col-9">
-                                      <fieldset>
-                                        <div class="custom-file">
-                                          <label class="custom-file-label form-control border-primary" for="FileName">Choose
-                                            file</label>
-                                          <input type="file" class="custom-file-input" id="FileName" name="FileName">
-                                        </div>
-                                      </fieldset>
-                                    </div>
-
-                                    <div class="col-3 text-center">
-                                      <button type="button" class="btn btn-danger" data-repeater-delete> <i class="ft-x"></i>
-                                        Delete</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="overflow-hidden">
-                                <div class="col-12">
-                                  <button data-repeater-create type="button" class="btn btn-primary">
-                                    <i class="ft-plus"></i> Add Images
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        --}}
-                        {{-- Repeater --}}
                         <div class="row">
                           <div class="col-md-12">
                             <div class="form-actions right">
@@ -350,6 +285,9 @@
   <!-- END MODERN JS-->
 
   <!-- BEGIN PAGE LEVEL JS-->
+
+  <script src="{{ asset('app-assets/vendors/js/editors/ckeditor/ckeditor.js')}}" type="text/javascript"></script>
+  <script src="{{ asset('app-assets/js/scripts/editors/editor-ckeditor.js')}}" type="text/javascript"></script>
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/dropzone.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

@@ -44,32 +44,30 @@
         </ul>
       </li>
 
-      <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title" data-i18n="nav.templates.main">Products</span></a>
+      <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title" data-i18n="nav.templates.main">Symptom</span></a>
         <ul class="menu-content">
-          <li class=" nav-item"><a href="{{ route('admin.CreateProducts') }}">Add new Products</a></li>
-          <li class=" nav-item"><a href="{{ route('admin.ListProducts') }}">List Products</a></li>
+          <li class=" nav-item"><a href="{{ route('symptom.create') }}"> Add new symptom</a></li>
+          <li class=" nav-item"><a href="{{ route('symptom.index') }}"> List Symptom</a></li>
         </ul>
       </li>
-      <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title" data-i18n="nav.templates.main">Attributes</span></a>
+      <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title" data-i18n="nav.templates.main">Diease</span></a>
         <ul class="menu-content">
-          <li class=" nav-item"><a href="{{ route('attribute.create') }}"> Add new attributes</a></li>
-          <li class=" nav-item"><a href="{{ route('attribute.index') }}"> List attributes</a></li>
+          <li class=" nav-item"><a href="{{ route('diease.create') }}"> Add new Diease</a></li>
+          <li class=" nav-item"><a href="{{ route('diease.index') }}"> List Diease</a></li>
         </ul>
       </li>
-      <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title" data-i18n="nav.templates.main">Attribute Group</span></a>
+      <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title" data-i18n="nav.templates.main">Patients</span></a>
         <ul class="menu-content">
-          <li class=" nav-item"><a href="{{ route('attributegroup.create') }}"> Add new attribute group</a></li>
-          <li class=" nav-item"><a href="{{ route('attributegroup.index') }}"> List attribute group</a></li>
+          <li class=" nav-item"><a href="{{ route('patients.create') }}"> Add new Patients</a></li>
+          <li class=" nav-item"><a href="{{ route('patients.index') }}"> List Patients</a></li>
         </ul>
       </li>
-
-      <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title" data-i18n="nav.templates.main">Attribute Options</span></a>
+      <li class=" nav-item"><a href="#"><i class="la la-television"></i><span class="menu-title" data-i18n="nav.templates.main">Search Diease</span></a>
         <ul class="menu-content">
-          <li class=" nav-item"><a href="{{ route('options.create') }}"> Add new attribute options</a></li>
-          <li class=" nav-item"><a href="{{ route('options.index') }}"> List attribute options</a></li>
+          <li class=" nav-item"><a href="{{ route('weight.index') }}"> List Diease</a></li>
         </ul>
       </li>
-
+      
     </ul>
   </div>
 </div>
